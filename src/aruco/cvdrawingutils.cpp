@@ -26,8 +26,9 @@ authors and should not be interpreted as representing official policies, either 
 or implied, of Rafael Muñoz Salinas.
 ********************************/
 #include <aruco/cvdrawingutils.h>
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/calib3d/calib3d.hpp>
+//#include <opencv2/highgui/highgui.hpp>
+//#include <opencv2/calib3d/calib3d.hpp>
+#include <opencv2/opencv.hpp>
 using namespace cv;
 namespace aruco {
 /****

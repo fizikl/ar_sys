@@ -29,8 +29,9 @@ or implied, of Rafael Muñoz Salinas.
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include <cstdio>
-#include <opencv2/calib3d/calib3d.hpp>
-#include <opencv2/highgui/highgui.hpp>
+//#include <opencv2/calib3d/calib3d.hpp>
+//#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/opencv.hpp>
 using namespace cv;
 namespace aruco {
 /**
@@ -254,7 +255,7 @@ void Marker::calculateExtrinsics(float markerSize,const CameraParameters &CP,boo
 }
 
 void print(cv::Point3f p,string cad){
- cout<<cad<<" "<<p.x<<" "<<p.y<< " "<<p.z<<endl; 
+ //cout<<cad<<" "<<p.x<<" "<<p.y<< " "<<p.z<<endl; 
 }
 /**
  */
@@ -295,7 +296,7 @@ void Marker::calculateExtrinsics(float markerSizeMeters,cv::Mat  camMatrix,cv::M
     //rotate the X axis so that Y is perpendicular to the marker plane
    if (setYPerpendicular) rotateXAxis(Rvec);
     ssize=markerSizeMeters; 
-    cout<<(*this)<<endl;
+    //cout<<(*this)<<endl;
     
 }
 

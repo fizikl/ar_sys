@@ -35,7 +35,7 @@ or implied, of Rafael Muñoz Salinas.
 #include "marker.h"
 using namespace std;
 
-namespace aruco
+namespace aruco 
 {
 
 /**\brief Main class for marker detection

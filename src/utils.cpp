@@ -11,6 +11,7 @@
 #include <iostream>
 #include <tf/transform_datatypes.h>
 #include <opencv2/calib3d/calib3d.hpp>
+#include <opencv2/opencv.hpp>
 
 aruco::CameraParameters ar_sys::getCamParams(const sensor_msgs::CameraInfo& cam_info,
 	bool useRectifiedParameters)

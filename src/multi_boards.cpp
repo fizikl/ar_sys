@@ -13,6 +13,7 @@
 #include <aruco/boarddetector.h>
 #include <aruco/cvdrawingutils.h>
 
+#include <opencv2/opencv.hpp>
 #include <opencv2/core/core.hpp>
 #include <ros/ros.h>
 #include <image_transport/image_transport.h>

@@ -8,6 +8,7 @@
 
 #include <opencv2/core/core.hpp>
 #include <aruco/aruco.h>
+#include <opencv2/opencv.hpp>
 
 #include <ros/ros.h>
 #include <tf/transform_broadcaster.h>

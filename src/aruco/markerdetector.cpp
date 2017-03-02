@@ -30,6 +30,7 @@ or implied, of Rafael Muñoz Salinas.
 #include <aruco/arucofidmarkers.h>
 #include <aruco/ar_omp.h>
 #include <opencv/cv.h>
+#include <opencv2/opencv.hpp>
 #include <opencv/highgui.h>
 #include <iostream>
 #include <fstream>
@@ -57,8 +58,7 @@ MarkerDetector::MarkerDetector()
     pyrdown_level=0; // no image reduction
     _minSize=0.04;
     _maxSize=0.5;
-
-  _borderDistThres=0.01;//corners in a border of 1% of image  are ignored
+    _borderDistThres=0.01;//corners in a border of 1% of image  are ignored
 }
 /************************************
  *

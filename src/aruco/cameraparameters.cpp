@@ -29,6 +29,7 @@ or implied, of Rafael Muñoz Salinas.
 #include <fstream>
 #include <iostream>
 #include <opencv/cv.h>
+#include <opencv2/opencv.hpp>
 using namespace std;
 namespace aruco
 {
