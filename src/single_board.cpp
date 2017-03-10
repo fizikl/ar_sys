@@ -49,6 +49,7 @@ class ArSysSingleBoard
 		ros::Publisher pose_pub;
 		ros::Publisher transform_pub; 
 		ros::Publisher position_pub;
+		ros::Publisher center_pos;
 		std::string board_frame;
 
 		double marker_size;
@@ -74,6 +75,7 @@ class ArSysSingleBoard
 			pose_pub = nh.advertise<geometry_msgs::PoseStamped>("pose", 100);
 			transform_pub = nh.advertise<geometry_msgs::TransformStamped>("transform", 100);
 			position_pub = nh.advertise<geometry_msgs::Vector3Stamped>("position", 100);
+			center_pos = nh.advertise<geometry_msgs::Point>("point", 100);
 
 			nh.param<double>("marker_size", marker_size, 0.05);
 			nh.param<std::string>("board_config", board_config, "boardConfiguration.yml");
@@ -131,6 +133,7 @@ class ArSysSingleBoard
 					positionMsg.header = transformMsg.header;
 					positionMsg.vector = transformMsg.transform.translation;
 					position_pub.publish(positionMsg);
+
 				}
 				//for each marker, draw info and its boundaries in the image
 				//cout << "number of markers " << markers.size() << "\n";
@@ -158,6 +161,7 @@ class ArSysSingleBoard
 						//cout << getDistance(mrkarry[1]) << "  " << mrkarry[1].id << "\n";
 						//cout << getDistance(mrkarry[2]) << "  " << mrkarry[2].id << "\n";
 						//cout << getDistance(mrkarry[3]) << "  " << mrkarry[3].id << "\n";
+						
 						for (size_t j = 0; j < 4; j++) {
 							if (j == 0 && getDistance(markers[i]) < getDistance(mrkarry[0])) {
 						//		cout << "0\n";
@@ -186,6 +190,28 @@ class ArSysSingleBoard
 						//		cout << "4\n";
 							}
 						}
+						if (markers[i].id == 101) {
+							cv::Point c0 = getCenter(markers[i]);
+							float center [2] = {c0.x, c0.y};
+							geometry_msgs::Point CenterMsg;
+							CenterMsg.x = center[0];
+							CenterMsg.y = center[1];
+							CenterMsg.z = 0;
+							center_pos.publish(CenterMsg);
+						} 
+						/*
+						if (markers[i].id == 101) {
+							mrkarry[0] = markers[i];
+						} 
+						if (markers[i].id == 111) {
+							mrkarry[1] = markers[i];
+						} 
+						if (markers[i].id == 121) {
+							mrkarry[2] = markers[i];
+						} 
+						if (markers[i].id == 131) {
+							mrkarry[3] = markers[i];
+						} */ 
 					}
 					// draw box arround 4 aruco found,
 					for(int i = 0; i < 4; i++) {
@@ -194,10 +220,10 @@ class ArSysSingleBoard
 						//CvDrawingUtils::draw3dAxis(resultImg, mrkarry[i], camParam);
 					}
 					// Draw boundary box:
-					cv::Point C1 = getCenter(mrkarry[0]);
-					cv::Point C2 = getCenter(mrkarry[1]);
-					cv::Point C3 = getCenter(mrkarry[2]);
-					cv::Point C4 = getCenter(mrkarry[3]);
+					cv::Point c1 = getCenter(mrkarry[0]);
+					cv::Point c2 = getCenter(mrkarry[1]);
+					cv::Point c3 = getCenter(mrkarry[2]);
+					cv::Point c4 = getCenter(mrkarry[3]);
 					// Put arucos in order:
 					Marker topLeft = mrkarry[0];
 					Marker bottomRight = mrkarry[1];
@@ -223,7 +249,7 @@ class ArSysSingleBoard
 					cv::line( resultImg,p4, p1,cv::Scalar(0,255,0),4,CV_AA);
 
 					// Define center point:
-					cv::Point centerPoint = cv::Point(p1.x+(p3.x-p1.x)/2, p1.y+(p3.y-p1.y)/2);
+					cv::Point centerPoint = cv::Point(c1.x+(c3.x-c1.x)/2, c1.y+(c3.y-c1.y)/2);
 					cout << "the center is at " << centerPoint.x << " and " << centerPoint.y << "\n";
 					// How to get Velocity?? How to access previous state?? speedometer node?
 					// Puting text:
