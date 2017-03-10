@@ -193,11 +193,14 @@ class ArSysSingleBoard
 						if (markers[i].id == 101) {
 							cv::Point c0 = getCenter(markers[i]);
 							float center [2] = {c0.x, c0.y};
-							geometry_msgs::Point CenterMsg;
-							CenterMsg.x = center[0];
-							CenterMsg.y = center[1];
-							CenterMsg.z = 0;
-							center_pos.publish(CenterMsg);
+							geometry_msgs::Point offsetMsg;
+							offsetMsg.x = center[0] - 320;
+							offsetMsg.y = center[1] - 240;
+							offsetMsg.z = getSize(markers[i]);
+							center_pos.publish(offsetMsg);
+							// draw a line to the center
+							cv::Point origin = cv::Point(320,240);
+							cv::line( resultImg, origin, c0,cv::Scalar(255,255,0),4,CV_AA);
 						} 
 						/*
 						if (markers[i].id == 101) {
@@ -352,11 +355,16 @@ class ArSysSingleBoard
 		cv::Point getCenter(const Marker &M)
 		{
 			cv::Point center;
-			int Cx = (M[0].x + M[1].x) / 2;
-			int Cy = (M[0].y + M[3].y) / 2;
-			center.x = Cx;
-			center.y = Cy;
+			center.x = (M[0].x + M[1].x + M[2].x + M[3].x) / 4;
+			center.y = (M[0].y + M[1].y + M[2].y + M[3].y) / 4;
 			return center;
+		}
+
+		float getSize(const Marker &M)
+		{
+			float x = M[0].x - M[2].x;
+			float y = M[0].y - M[2].y;
+			return x*y;
 		}
 };
 
