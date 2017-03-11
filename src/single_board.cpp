@@ -190,7 +190,7 @@ class ArSysSingleBoard
 						//		cout << "4\n";
 							}
 						}
-						if (markers[i].id == 101) {
+						if (markers[i].id == 111) {
 							cv::Point c0 = getCenter(markers[i]);
 							float center [2] = {c0.x, c0.y};
 							geometry_msgs::Point offsetMsg;
