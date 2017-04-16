@@ -191,7 +191,9 @@ class ArSysSingleBoard
 							}
 						}
 						if (markers[i].id == 111) {
-							cv::Point c0 = getCenter(markers[i]);
+							//cv::Point c0 = getCenter(markers[i]);
+							cv::Point c0 = markers[i].getCenter();
+							//cv::Point c0 = cv::Point(14.5,46.67);
 							float center [2] = {c0.x, c0.y};
 							geometry_msgs::Point offsetMsg;
 							offsetMsg.x = center[0] - 320;
@@ -355,6 +357,7 @@ class ArSysSingleBoard
 		cv::Point getCenter(const Marker &M)
 		{
 			cv::Point center;
+			//cout << M[0] << "\n";
 			center.x = (M[0].x + M[1].x + M[2].x + M[3].x) / 4;
 			center.y = (M[0].y + M[1].y + M[2].y + M[3].y) / 4;
 			return center;
