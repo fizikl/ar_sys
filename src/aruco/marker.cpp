@@ -341,7 +341,6 @@ cv::Point2f Marker::getCenter()const
   for(size_t i=0;i<size();i++){
    cent.x+=(*this)[i].x;
    cent.y+=(*this)[i].y;
-   cout << "marker.cpp: " << (*this)[i].x << "  " << (*this)[i].y << "\n";
   }
    //cent.x/=float(size());
    //cent.y/=float(size());

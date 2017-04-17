@@ -51,7 +51,7 @@ MarkerDetector::MarkerDetector()
     _doErosion=false; 
     _thresMethod=ADPT_THRES;
     _thresParam1=_thresParam2=7;
-    _cornerMethod=LINES;
+    _cornerMethod=NONE;
     _markerWarpSize=56;
     _speed=0;
     markerIdDetector_ptrfunc=aruco::FiducidalMarkers::detect;
@@ -186,7 +186,6 @@ void MarkerDetector::detect ( const  cv::Mat &input,vector<Marker> &detectedMark
     
     ///identify the markers
     vector<vector<Marker> >markers_omp(omp_get_max_threads());
-    cout << "number of threads: " << omp_get_max_threads() << "\n";
     vector<vector < std::vector<cv::Point2f> > >candidates_omp(omp_get_max_threads());
     #pragma omp parallel for
     for ( unsigned int i=0;i<MarkerCanditates.size();i++ )
@@ -209,7 +208,6 @@ void MarkerDetector::detect ( const  cv::Mat &input,vector<Marker> &detectedMark
             }
             else candidates_omp[omp_get_thread_num()].push_back ( MarkerCanditates[i] );
         }
-       
     }
     //unify parallel data 
 	joinVectors(markers_omp,detectedMarkers,true);
@@ -262,7 +260,9 @@ void MarkerDetector::detect ( const  cv::Mat &input,vector<Marker> &detectedMark
 
 	}
  
-        
+        //if (detectedMarkers.size() != 0) 
+
+    //cout << "detectedMarkers: " << detectedMarkers[0][1] << "\n";
     }
     //remove the markers marker
     removeElements ( detectedMarkers, toRemove );
@@ -314,7 +314,7 @@ void MarkerDetector::detectRectangles(const cv::Mat &thresImg,vector<MarkerCandi
         if ( minSize< contours2[i].size() &&contours2[i].size()<maxSize  )
         {
             //approximate to a poligon
-            approxPolyDP (  contours2[i]  ,approxCurve , double ( contours2[i].size() ) *0.05 , true );
+            approxPolyDP (  contours2[i]  ,approxCurve , double ( contours2[i].size() ) * 0.05 , true );
             // 				drawApproxCurve(copy,approxCurve,Scalar(0,0,255));
             //check that the poligon has 4 points
             if ( approxCurve.size() ==4 )
@@ -329,12 +329,13 @@ void MarkerDetector::detectRectangles(const cv::Mat &thresImg,vector<MarkerCandi
                 {
 // 					      drawApproxCurve(input,approxCurve,Scalar(255,0,255));
 // 						//ensure that the   distace between consecutive points is large enough
-                    float minDist=1e10;
+                    float minDist=1e4;
                     for ( int j=0;j<4;j++ )
                     {
                         float d= std::sqrt ( ( float ) ( approxCurve[j].x-approxCurve[ ( j+1 ) %4].x ) * ( approxCurve[j].x-approxCurve[ ( j+1 ) %4].x ) +
                                              ( approxCurve[j].y-approxCurve[ ( j+1 ) %4].y ) * ( approxCurve[j].y-approxCurve[ ( j+1 ) %4].y ) );
                         // 		norm(Mat(approxCurve[i]),Mat(approxCurve[(i+1)%4]));
+                       
                         if ( d<minDist ) minDist=d;
                     }
                     //check that distance is not very small
@@ -489,6 +490,7 @@ bool MarkerDetector::warp ( Mat &in,Mat &out,Size size, vector<Point2f> points )
     pointsRes[3]= Point2f ( 0,size.height-1 );
     Mat M=getPerspectiveTransform ( pointsIn,pointsRes );
     cv::warpPerspective ( in, out,  M, size,cv::INTER_NEAREST );
+    //out = in.clone();
     return true;
 }
 
