@@ -186,6 +186,7 @@ void MarkerDetector::detect ( const  cv::Mat &input,vector<Marker> &detectedMark
     
     ///identify the markers
     vector<vector<Marker> >markers_omp(omp_get_max_threads());
+    cout << "number of threads: " << omp_get_max_threads() << "\n";
     vector<vector < std::vector<cv::Point2f> > >candidates_omp(omp_get_max_threads());
     #pragma omp parallel for
     for ( unsigned int i=0;i<MarkerCanditates.size();i++ )
@@ -213,6 +214,10 @@ void MarkerDetector::detect ( const  cv::Mat &input,vector<Marker> &detectedMark
     //unify parallel data 
 	joinVectors(markers_omp,detectedMarkers,true);
 	joinVectors(candidates_omp,_candidates,true);
+
+    //cv::Point2f p1 = this[0].getCenter();
+
+    //cout << "in marker detector: " << detectedMarkers[0].getCenter().x << "\n";
 
 
 

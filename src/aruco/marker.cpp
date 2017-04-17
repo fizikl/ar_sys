@@ -327,16 +327,26 @@ void Marker::rotateXAxis(Mat &rotation)
  */
 cv::Point2f Marker::getCenter()const
 {
+    /*
+  (*this)[0].x = 10;
+  (*this)[0].y = 10;
+  (*this)[1].x = 20;
+  (*this)[1].y = 20;
+  (*this)[2].x = 30;
+  (*this)[2].y = 30;
+  (*this)[3].x = 40;
+  (*this)[3].y = 40;
+  */
   cv::Point2f cent(0,0);
   for(size_t i=0;i<size();i++){
    cent.x+=(*this)[i].x;
    cent.y+=(*this)[i].y;
+   cout << "marker.cpp: " << (*this)[i].x << "  " << (*this)[i].y << "\n";
   }
    //cent.x/=float(size());
    //cent.y/=float(size());
    cent.x/=int(size());
    cent.y/=int(size());
-   cout << (*this)[0].x << "  " << (*this)[0].y << "\n";
    return cent;
 }
 
@@ -352,6 +362,9 @@ float Marker::getArea()const
     cv::Point2f v21=(*this)[1]-(*this)[2];
     cv::Point2f v23=(*this)[3]-(*this)[2];
     float area2=fabs(v21.x*v23.y - v21.y*v23.x);
+
+    cout << "area is: " << (area2+area1)/2. << "\n";
+
     return (area2+area1)/2.;
     
   

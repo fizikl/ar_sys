@@ -193,6 +193,7 @@ class ArSysSingleBoard
 						if (markers[i].id == 111) {
 							//cv::Point c0 = getCenter(markers[i]);
 							cv::Point c0 = markers[i].getCenter();
+							cout << "Single board, center is at: " << c0 << "\n";
 							//cv::Point c0 = cv::Point(14.5,46.67);
 							float center [2] = {c0.x, c0.y};
 							geometry_msgs::Point offsetMsg;
@@ -255,7 +256,7 @@ class ArSysSingleBoard
 
 					// Define center point:
 					cv::Point centerPoint = cv::Point(c1.x+(c3.x-c1.x)/2, c1.y+(c3.y-c1.y)/2);
-					cout << "the center is at " << centerPoint.x << " and " << centerPoint.y << "\n";
+					//cout << "the center is at " << centerPoint.x << " and " << centerPoint.y << "\n";
 					// How to get Velocity?? How to access previous state?? speedometer node?
 					// Puting text:
 					// info
