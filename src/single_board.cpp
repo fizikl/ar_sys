@@ -24,6 +24,7 @@
 #include <tf/transform_listener.h>
 #include <cmath>
 #include <string>
+#include <std_msgs/Int8.h>
 
 using namespace aruco;
 
@@ -43,6 +44,7 @@ class ArSysSingleBoard
 		BoardDetector the_board_detector;
 		Board the_board_detected;
 		ros::Subscriber cam_info_sub;
+		ros::Subscriber cam_trigger_sub;
 		bool cam_info_received;
 		image_transport::Publisher image_pub;
 		image_transport::Publisher debug_pub;
@@ -69,13 +71,14 @@ class ArSysSingleBoard
 		{
 			image_sub = it.subscribe("/image", 1, &ArSysSingleBoard::image_callback, this);
 			cam_info_sub = nh.subscribe("/camera_info", 1, &ArSysSingleBoard::cam_info_callback, this);
+			cam_trigger_sub = nh.subscribe("/cam_triger", 10, &ArSysSingleBoard::cam_trigger_callback, this);
 
 			image_pub = it.advertise("result", 1);
 			debug_pub = it.advertise("debug", 1);
 			pose_pub = nh.advertise<geometry_msgs::PoseStamped>("pose", 100);
 			transform_pub = nh.advertise<geometry_msgs::TransformStamped>("transform", 100);
 			position_pub = nh.advertise<geometry_msgs::Vector3Stamped>("position", 100);
-			center_pos = nh.advertise<geometry_msgs::Point>("point", 100);
+			center_pos = nh.advertise<geometry_msgs::Point>("offset", 100);
 
 			nh.param<double>("marker_size", marker_size, 0.05);
 			nh.param<std::string>("board_config", board_config, "boardConfiguration.yml");
@@ -197,12 +200,12 @@ class ArSysSingleBoard
 							//cv::Point c0 = cv::Point(14.5,46.67);
 							float center [2] = {c0.x, c0.y};
 							geometry_msgs::Point offsetMsg;
-							offsetMsg.x = center[0] - 320;
-							offsetMsg.y = center[1] - 240;
+							offsetMsg.x = center[0] - 100;
+							offsetMsg.y = center[1] - 100;
 							offsetMsg.z = getSize(markers[i]);
 							center_pos.publish(offsetMsg);
 							// draw a line to the center
-							cv::Point origin = cv::Point(320,240);
+							cv::Point origin = cv::Point(100,100);
 							cv::line( resultImg, origin, c0,cv::Scalar(255,255,0),4,CV_AA);
 						} 
 						/*
@@ -341,6 +344,17 @@ class ArSysSingleBoard
 			cam_info_sub.shutdown();
 		}
 
+		// subscribe to camera trigger from micro-guidance
+		// save image frames using trigger
+		int i = 0; 
+		void cam_trigger_callback(const std_msgs::Int8 &msg) 
+		{
+			if (msg.data) {
+
+				imwrite( cv::format("/home/alzuhair/Gray_Image%d.jpg", i), inImage);
+				i++;
+			}
+		}
 		// input: A marker,
 		// output: the distance between the centor of the marker to centor of the image
 		// Added by shirman
