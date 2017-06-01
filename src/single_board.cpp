@@ -351,7 +351,7 @@ class ArSysSingleBoard
 		{
 			if (msg.data) {
 
-				imwrite( cv::format("/home/alzuhair/Gray_Image%d.jpg", i), inImage);
+				imwrite( cv::format("/home/alzuhair/Gray_Image%d.jpg", i), inImage); // alzuhair here should be chagned to your honmme directory
 				i++;
 			}
 		}
